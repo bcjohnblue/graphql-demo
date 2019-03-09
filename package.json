@@ -2,17 +2,20 @@
   "name": "graphql-demo",
   "version": "1.0.0",
   "description": "graphql demo",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint *.js",
-    "start": "nodemon index.js"
+    "start": "nodemon app.js"
   },
   "author": "bcjohnblue",
   "license": "ISC",
   "dependencies": {
     "apollo-server": "^2.4.8",
-    "graphql": "^14.1.1"
+    "apollo-server-express": "^2.4.8",
+    "body-parser": "^1.18.3",
+    "graphql": "^14.1.1",
+    "mongoose": "^5.4.17"
   },
   "devDependencies": {
     "eslint": "^5.15.1"

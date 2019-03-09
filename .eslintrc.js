@@ -13,7 +13,15 @@ module.exports = {
         "ecmaVersion": 2018
     },
     "rules": {
-        "quotes": ["error", "single"],
-        'no-console': 'off',
+        quotes: ["error", "single"],
+        "no-console": "off",
+        "object-curly-newline": ["error", {
+            "ObjectPattern": {
+                "multiline": true
+            },
+            // "ObjectExpression": {
+            //     "multiline": true
+            // },
+        }]
     }
 };
