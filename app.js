@@ -10,8 +10,11 @@ const MONGODB_URI = 'mongodb+srv://bcjohn:bcjohn@cluster0-kqft0.mongodb.net/test
 const typeDefs = require('./graphql/schema')
 const resolvers = require('./graphql/resolvers')
 
-const bodyParser = require('body-parser')
+// const bodyParser = require('body-parser')
 // app.use(bodyParser.json())
+const brcypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
+
 
 const app = express();
 
@@ -50,12 +53,12 @@ server.applyMiddleware({
 (async () => {
   try {
     await mongoose.connect(MONGODB_URI)
-    const user = new User({
-      email: 'bcjohnblue@gmail.com',
-      name: 'bcjohn',
-      password: 'bcjohn'
-    })
-    user.save()
+    // const user = new User({
+    //   email: 'bcjohnblue@gmail.com',
+    //   name: 'bcjohn',
+    //   password: 'bcjohn'
+    // })
+    // user.save()
     await app.listen({
       port: 4000
     });
