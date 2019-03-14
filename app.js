@@ -20,6 +20,7 @@ const app = express();
 
 
 const User = require('./models/user')
+const Product = require('./models/product')
 
 // app.use('/', (req, res, next) => {
 //   console.log('In middleware!')
