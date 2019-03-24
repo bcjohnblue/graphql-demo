@@ -1,4 +1,6 @@
-const {gql} = require('apollo-server-express');
+const {
+  gql
+} = require('apollo-server-express');
 
 const typeDefs = gql `
   type Post {
@@ -35,8 +37,8 @@ const typeDefs = gql `
 
   input userInputData {
     email: String!
-    name: String!
-    password: String!
+    name: String
+    password: String
   }
 
   input loginInputData {

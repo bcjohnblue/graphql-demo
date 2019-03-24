@@ -23,34 +23,35 @@ const resolvers = {
         name,
         password
       } = userInput;
-      console.log(password);
+      console.log(userInput);
 
       const hash = await bcrypt.hash(password, 12);
-      // await bcrypt.genSalt(10, function (err, salt) {
-      //   bcrypt.hash(password, salt, function (err, hash) {
-      //     password = hash
-      //     console.log(hash);
-
-      //   })
-      // })
-      console.log(hash);
-
-      const user = new User({
-        email,
-        name,
-        password
+      const hasUser = await User.findOne({
+        email
       });
-      const createdUser = await user.save();
-      const result = {
-        ...createdUser._doc,
-        userId: createdUser._id.toString()
-      };
-      console.log(createdUser);
-      console.log(result.id);
-      return {
-        ...createdUser._doc,
-        userId: createdUser._id.toString()
-      };
+
+      if (hasUser) {
+        const error = new Error('User has been registered!');
+        error.code = 404;
+        throw error;
+      }
+
+      // const user = new User({
+      //   email,
+      //   name,
+      //   password
+      // });
+      // const createdUser = await user.save();
+      // const result = {
+      //   ...createdUser._doc,
+      //   userId: createdUser._id.toString()
+      // };
+      // console.log(createdUser);
+      // console.log(result.id);
+      // return {
+      //   ...createdUser._doc,
+      //   userId: createdUser._id.toString()
+      // };
     },
     async login(
       root, {
