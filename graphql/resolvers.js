@@ -25,7 +25,7 @@ const resolvers = {
       } = userInput;
       console.log(userInput);
 
-      const hash = await bcrypt.hash(password, 12);
+      const hashPassword = await bcrypt.hash(password, 12);
       const hasUser = await User.findOne({
         email
       });
@@ -36,23 +36,24 @@ const resolvers = {
         throw error;
       }
 
-      // const user = new User({
-      //   email,
-      //   name,
-      //   password
-      // });
-      // const createdUser = await user.save();
-      // const result = {
-      //   ...createdUser._doc,
-      //   userId: createdUser._id.toString()
-      // };
-      // console.log(createdUser);
-      // console.log(result.id);
-      // return {
-      //   ...createdUser._doc,
-      //   userId: createdUser._id.toString()
-      // };
+      const user = new User({
+        email,
+        name,
+        password: hashPassword
+      });
+      const createdUser = await user.save();
+      const result = {
+        ...createdUser._doc,
+        userId: createdUser._id.toString()
+      };
+      console.log(createdUser);
+      console.log(result.id);
+      return {
+        ...createdUser._doc,
+        userId: createdUser._id.toString()
+      };
     },
+
     async login(
       root, {
         loginInput: {
@@ -100,20 +101,30 @@ const resolvers = {
         token
       };
     },
-    async getProduct(root, {productInput}, text) {
+    async getProducts(root, {productInput}, text) {
       let result;
-      const {title} = productInput;
+      const {
+        title,
+        price
+      } = productInput;
+      const sortOptions = price ? {
+        price
+      } : {};
+
       if (title) {
         result = await Product.find({
           title: {
             $regex: `.*${title}.*`
           }
-        });
+        }).sort(sortOptions).exec();
       } else {
-        result = await Product.find();
+        result = await Product.find().sort(sortOptions).exec();
       }
 
+      // console.log(result);
+      result.map(item => item.productId = item._id)
       console.log(result);
+
       return result;
     },
     async createProduct(root, {productInput}, text) {
@@ -142,10 +153,30 @@ const resolvers = {
       const user = await User.findById(userId);
       console.log('user', user);
 
-      user.cart.items.push({
-        productId,
-        quantity: 1
+      let product = await Product.find({
+        _id: {
+          $in: productId
+        }
       });
+      product = {
+        productId: product[0]._doc._id,
+        ...product[0]._doc
+      }
+
+      const target = user.cart.items.find(item => item.product.productId === productId)
+      console.log(target);
+
+      if (target) {
+        target.quantity += 1
+      } else {
+        user.cart.items.push({
+          product,
+          quantity: 1
+        });
+      }
+
+      console.log(user.cart.items);
+
       user.save();
 
       // const items = {
@@ -169,18 +200,18 @@ const resolvers = {
     async getCart(root, {userId}) {
       const user = await User.findById(userId);
       console.log(user.cart.items);
-      console.log(user._doc);
-      const productId = user.cart.items.map(item => item.productId);
-      const product = await Product.find({
-        _id: {
-          $in: productId
-        }
-      });
-      console.log(productId);
+      // console.log(user._doc);
+      // const productId = user.cart.items.map(item => item.productId);
+      // const product = await Product.find({
+      //   _id: {
+      //     $in: productId
+      //   }
+      // });
+      // console.log(productId);
 
-      console.log(product);
+      // console.log(product);
 
-      return [...product]
+      return user.cart.items
     }
   }
 };

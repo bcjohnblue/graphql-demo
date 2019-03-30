@@ -1,6 +1,4 @@
-const {
-  gql
-} = require('apollo-server-express');
+const {gql} = require('apollo-server-express');
 
 const typeDefs = gql `
   type Post {
@@ -14,7 +12,7 @@ const typeDefs = gql `
   }
 
   type CartItem {
-    productId: String
+    product: Product
     quantity: Int
   }
 
@@ -48,7 +46,7 @@ const typeDefs = gql `
 
   input productInputData {
     title: String
-    price: String
+    price: Int
     description: String
     imageUrl: String
   }
@@ -59,12 +57,13 @@ const typeDefs = gql `
   }
 
   type Mutation {
+    # createUser(email: String!, name: String, password: String): User
     createUser(userInput: userInputData): User
     login(loginInput: loginInputData): User
-    getProduct(productInput: productInputData): [Product]
+    getProducts(productInput: productInputData): [Product]
     createProduct(productInput: productInputData): Product
     addToCart(userId: ID!, productId: ID): User
-    getCart(userId: ID!): [Product]
+    getCart(userId: ID!): [CartItem]
   }
 `;
 
