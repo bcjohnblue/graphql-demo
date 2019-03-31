@@ -64,6 +64,7 @@ const typeDefs = gql `
     createProduct(productInput: productInputData): Product
     addToCart(userId: ID!, productId: ID): User
     getCart(userId: ID!): [CartItem]
+    deleteCart(userId: ID!, productId: ID!): User
   }
 `;
 

@@ -212,6 +212,26 @@ const resolvers = {
       // console.log(product);
 
       return user.cart.items
+    },
+    async deleteCart(root, {
+      userId,
+      productId
+    }) {
+      let user = await User.findById(userId);
+      console.log(user);
+
+      const targetIndex = user.cart.items.findIndex(item => item.product.productId === productId)
+      if (targetIndex !== -1) user.cart.items.splice(targetIndex, 1)
+
+      console.log(targetIndex);
+      user.save();
+      console.log(user);
+      user = {
+        userId: user._id,
+        ...user
+      }
+
+      return user
     }
   }
 };
